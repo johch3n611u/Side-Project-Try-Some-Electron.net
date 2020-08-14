@@ -10,7 +10,11 @@
 
 <https://igouist.github.io/post/202006-electron-net/#%E5%89%8D%E5%BE%8C%E7%AB%AF%E5%82%B3%E5%80%BC-ipcmain-ipcrenderer>
 
+<https://www.twblogs.net/a/5d2dc15bbd9eee1ede077b6e>
 
+<https://stackoverflow.com/questions/38365386/node-js-how-open-read-a-xlsx-file-containing-the-password>
+
+<https://github.com/dtjohnson/xlsx-populate/blob/master/README.md>
 
 <https://blog.csdn.net/q809198545/article/details/79652416>
 
