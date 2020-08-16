@@ -11,7 +11,7 @@
 <hr class="w-100" />
 <div class="row">
     <div id="searchTable" style="width:100vw;margin-bottom:1%;" width="100%"></div>
-    <hr class="w-100"/>
+    <hr class="w-100" />
     <table id="dataTable" class="display" style="width:100vw;margin-top:1%;" width="100%"></table>
 </div>
 
@@ -35,12 +35,16 @@
 
         console.log('★★★ nodeRequire End ★★★');
     </script>
-    <script src=" https://code.jquery.com/jquery-3.5.1.js"></script>
-    @* DataTables.js *@
+    @*<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    // DataTables.js 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    // Sheet.js 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js" integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg==" crossorigin="anonymous"></script> *@
 
-    @* Sheet.js *@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js" integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg==" crossorigin="anonymous"></script>
+<script src="~/js/jquery-3.5.1.js"></script>
+<script src="~/js/jquery.dataTables.min.js"></script>
+<script src="~/js/xlsx.full.min.js"></script>
+
     <script>
         console.log('★★★ script Sheet.js var Set ★★★');
 
@@ -147,13 +151,14 @@
             //生成 SearchTable
             console.log('★★★ SearchTable Set ★★★');
 
-            let st_html = "<ul style='display:flex;flex-wrap:wrap;'>";
+            let st_html = "<ul style='display:flex;flex-wrap:wrap;justify-content:flex-start;'>";
 
             for (let i = 0; i < stheader.length; i++) {
 
-                st_html += '<li data-column="' + (i + 1) + '"><label for="stheader_' + (i + 1) + '">' + stheader[i];
-                st_html += '</label><input class="column_filter" type="text" id="stheader_' + (i + 1);
-                st_html += '" style="margin-left:3%;"/></li>';
+                st_html += '<li style="width: 25%;" data-column="' + (i + 1) + '"><label for="stheader_' + (i + 1) + '">' + stheader[i];
+                st_html += '</label> (智慧搜尋 <input type="checkbox" class="column_filter" id="stheader_smart_' + (i + 1);
+                st_html += '" checked="checked">)<input class="column_filter" type="text" id="stheader_' + (i + 1);
+                st_html += '" style="margin-left:3%;"/></li >';
 
                 // console.log('st_html_Set', st_html);
 
@@ -201,15 +206,20 @@
 
             $('input.column_filter').on('keyup click', function () {
                 console.log('★★★ keyup click ★★★');
-                console.log('$(this).parents("li").attr("data - column")', $(this).parents('li').attr('data-column'));
+                // console.log('$(this).parents("li").attr("data - column")', $(this).parents('li').attr('data-column'));
                 filterColumn($(this).parents('li').attr('data-column'));
             });
 
             function filterColumn(i) {
-                console.log('filterColumn(i),i=', i);
-                console.log('$("#stheader_" + i).val()', $('#stheader_' + i).val());
-                console.log('$("#dataTable").DataTable().column(i+1)', $('#dataTable').DataTable().column(i + 1));
-                $('#dataTable').DataTable().column(i).search($('#stheader_' + i).val(), false, true).draw();
+                // console.log('i', i);
+                // console.log('$("#stheader_" + i).val()', $('#stheader_' + i).val());
+                // console.log('$("#dataTable").DataTable().column(i+1)', $('#dataTable').DataTable().column(i + 1));
+                console.log('$("#stheader_smart_i").prop("checked")', $('#stheader_smart_' + i).prop('checked'));
+                $('#dataTable').DataTable().column(i).search(
+                    $('#stheader_' + i).val(),
+                    false,
+                    $('#stheader_smart_' + i).prop('checked')
+                ).draw();
             }
 
             console.log('★★★ function End ★★★');
