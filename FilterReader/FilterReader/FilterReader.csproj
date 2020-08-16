@@ -3,6 +3,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="wwwroot\ar\**" />
+    <Content Remove="wwwroot\ar\**" />
+    <EmbeddedResource Remove="wwwroot\ar\**" />
+    <None Remove="wwwroot\ar\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />
   </ItemGroup>
   <ItemGroup>

@@ -15,3 +15,4 @@ obj/
 .vscode
 .vs
 SecurityAudit.xlsx
+node_modules

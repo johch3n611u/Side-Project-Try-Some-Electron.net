@@ -1,17 +1,226 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "SecurityAudit";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+<h1 class="display-3">SecurityAudit</h1>
+<hr class="w-100" />
+<div class="row">
+    <div id="searchTable" style="width:100vw;margin-bottom:1%;" width="100%"></div>
+    <hr class="w-100"/>
+    <table id="dataTable" class="display" style="width:100vw;margin-top:1%;" width="100%"></table>
 </div>
 
-<script>
+@section Scripts{
 
+    <script>
+        console.log('★★★ script Start ★★★');
+    </script>
 
+    @* jquery in Electron (node.js) *@
+    @* https://blog.darkthread.net/blog/jquery-in-electron/ *@
+    <script>
+        console.log('★★★ nodeRequire Set ★★★');
 
+        if (typeof require !== "undefined") {
+            window.nodeRequire = require;
+            delete window.require;
+            delete window.exports;
+            delete window.module;
+        }
 
+        console.log('★★★ nodeRequire End ★★★');
+    </script>
+    <script src=" https://code.jquery.com/jquery-3.5.1.js"></script>
+    @* DataTables.js *@
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
+    @* Sheet.js *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js" integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg==" crossorigin="anonymous"></script>
+    <script>
+        console.log('★★★ script Sheet.js var Set ★★★');
 
-</script>
+        const xlxs = nodeRequire('xlsx');
+        const { readFile } = nodeRequire('fs').promises;
+
+        const result = {};
+        let workbook;
+        let roa;
+        let SheetName;
+        const dtheader = [];
+        const stheader = [];
+        let JSONSheet;
+
+        console.log('★★★ async text Set ★★★');
+
+        (async function (params) {
+
+            console.log('★★★ async function Start ★★★');
+
+            // 获取数据
+            let excelBuffer = await readFile('../../../../wwwroot/js/SecurityAudit.xlsx');
+
+            console.log('excelBuffer:', excelBuffer);
+
+            // 解析数据
+            workbook = xlxs.read(excelBuffer, { type: 'buffer', cellHTML: false, });
+
+            console.log('workbook:', workbook);
+
+            workbook.SheetNames.forEach(function (sheetName) {
+
+                console.log('SheetName:', sheetName);
+
+                SheetName = sheetName;
+
+                roa = xlxs.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+
+                console.log('roa:', roa);
+
+                if (roa.length > 0) {
+
+                    result[sheetName] = roa;
+
+                    console.log('result[sheetName]:', result[sheetName]);
+
+                    // header
+                    const columnCount = xlxs.utils.decode_range(workbook.Sheets[sheetName]['!ref']).e.c + 1;
+
+                    console.log('columnCount', columnCount);
+
+                    for (let i = 0; i < columnCount; ++i) {
+                        dtheader[i] = workbook.Sheets[sheetName][`${xlxs.utils.encode_col(i)}1`].v;
+                        stheader[i] = dtheader[i];
+                    }
+
+                    dtheader.unshift("");
+
+                    console.log('dtheader', dtheader);
+
+                    console.log('stheader', stheader);
+
+                }
+
+            });
+
+            @* DataTables.js *@
+            console.log('result:', result);
+
+            // columnsSet
+            let columnsSet = [];
+            for (let i = 0; i < dtheader.length; ++i) {
+                columnsSet[i] = { 'title': dtheader[i] };
+            }
+            console.log('columnsSet', columnsSet);
+
+            // dataSet
+            let dataSet = [];
+            let data = [];
+            for (let i = 0; i < roa.length; i++){
+
+                for (let j = 0; j < dtheader.length; j++) {
+
+                    data[j] = roa[i][dtheader[j]];
+                    if (roa[i][dtheader[j]] == undefined) { data[j] = null; }
+
+                }
+
+                // console.log('data', data);
+
+                dataSet[i] = data;
+                data = [];
+            }
+
+            console.log('dataSet', dataSet);
+
+            // JQ Document Ready
+            $(document).ready(function () {
+
+                console.log('★★★ JQ.document.ready ★★★');
+
+            });
+
+            //生成 SearchTable
+            console.log('★★★ SearchTable Set ★★★');
+
+            let st_html = "<ul style='display:flex;flex-wrap:wrap;'>";
+
+            for (let i = 0; i < stheader.length; i++) {
+
+                st_html += '<li data-column="' + (i + 1) + '"><label for="stheader_' + (i + 1) + '">' + stheader[i];
+                st_html += '</label><input class="column_filter" type="text" id="stheader_' + (i + 1);
+                st_html += '" style="margin-left:3%;"/></li>';
+
+                // console.log('st_html_Set', st_html);
+
+            };
+
+            st_html += "</ul>";
+
+            // console.log('st_html_End', st_html);
+
+            console.log("$('#searchTable')", $('#searchTable'));
+
+            $('#searchTable').html(st_html);
+
+            console.log('★★★ SearchTable Set ★★★');
+
+            //生成 DataTable
+            console.log('★★★ DataTable Set ★★★');
+            var dt = $('#dataTable').DataTable(
+                {
+                    columns: columnsSet,
+                    columnDefs: [{
+
+                        targets: 0,
+                        searchable: false,
+                        orderable: false,
+
+                    }],
+                    data: dataSet,
+                    destroy: true //Cannot reinitialise DataTable,解决重新加载表格内容问题
+                }
+            );
+            dt.on('order.dt search.dt', function () {
+                dt.column(0, { search: 'applied', order: 'applied' }).nodes().each(
+                    function (cell, i) {
+                    cell.innerHTML = i + 1;
+                    }
+                );
+            }).draw();
+
+            console.log('★★★ DataTable End ★★★');
+
+            console.log('★★★ function Start ★★★');
+
+            console.log('$("input.column_filter")', $('input.column_filter'))
+
+            $('input.column_filter').on('keyup click', function () {
+                console.log('★★★ keyup click ★★★');
+                console.log('$(this).parents("li").attr("data - column")', $(this).parents('li').attr('data-column'));
+                filterColumn($(this).parents('li').attr('data-column'));
+            });
+
+            function filterColumn(i) {
+                console.log('filterColumn(i),i=', i);
+                console.log('$("#stheader_" + i).val()', $('#stheader_' + i).val());
+                console.log('$("#dataTable").DataTable().column(i+1)', $('#dataTable').DataTable().column(i + 1));
+                $('#dataTable').DataTable().column(i).search($('#stheader_' + i).val(), false, true).draw();
+            }
+
+            console.log('★★★ function End ★★★');
+
+            console.log('★★★ async function End ★★★');
+
+        })();
+
+        console.log('★★★ async text End ★★★');
+
+        console.log('★★★ script End ★★★');
+    </script>
+
+}
