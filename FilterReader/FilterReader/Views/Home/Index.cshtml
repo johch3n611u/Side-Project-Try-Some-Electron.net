@@ -35,23 +35,33 @@
 
         console.log('★★★ nodeRequire End ★★★');
     </script>
-    @*<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    // DataTables.js 
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    // Sheet.js 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js" integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg==" crossorigin="anonymous"></script> *@
 
-<script src="~/js/jquery-3.5.1.js"></script>
-<script src="~/js/jquery.dataTables.min.js"></script>
-<script src="~/js/xlsx.full.min.js"></script>
+    @* cdn *@
+    @*<script src="https://code.jquery.com/jquery-3.5.1.js">// jquery</script>
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js">// DataTables.js</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.6/xlsx.full.min.js" integrity="sha512-y/6xOMDHnSz1X2azryTilOlwPm/yWBDI9zY87kTAHiaDAl+32nW2kT+1M8TtHDikgVaO0a/XcEujCW8lm2z+Dg==" crossorigin="anonymous">// Sheet.js</script>*@
+
+    @* develop *@
+    @*<script src="~/js/jquery-3.5.1.js"></script>
+        <script src="~/js/jquery.dataTables.min.js"></script>
+        <script src="~/js/xlsx.full.min.js"></script>*@
+
+    @* runtime *@
+    <script src="~/js/jquery-3.5.1.js"></script>
+        <script src="~/js/jquery.dataTables.min.js"></script>
+        <script src="~/js/xlsx.full.min.js"></script>
 
     <script>
-        let filePath = "../../../../wwwroot/xlsx/SecurityAudit.xlsx";
+        let filePath = "./resources/bin/wwwroot/xlsx/SecurityAudit.xlsx"; // runtime
+        //let filePath = "../../../../wwwroot/xlsx/SecurityAudit.xlsx"; // develop
         console.log('filePath', filePath);
 
         console.log('★★★ script Sheet.js var Set ★★★');
 
-        const xlxs = nodeRequire('xlsx');
+        //const xlxs = nodeRequire('xlsx');
+        //const xlxs = nodeRequire('XLSX');
+        const xlxs = XLSX;
+
         const { readFile } = nodeRequire('fs').promises;
 
         const result = {};
