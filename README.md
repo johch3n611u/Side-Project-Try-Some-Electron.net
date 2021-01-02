@@ -1,6 +1,10 @@
 ## 引言
 
-幫老媽做個單機程式減少他工作量
+幫老媽做個單機程式減少他工作量，
+
+Hellow Electron.net 利用 sheetjs datatablesjs，
+
+所拼裝單機桌面讀取 xlsx 閱讀器，任何 xlsx 單工作簿皆可使用。
 
 # 簡易 xlsx 篩選閱讀器
 
